@@ -1,0 +1,46 @@
+#include "Behaviors/StateMachine.h"
+
+$nodeclass PilotLabMaze : VisualRoutinesStateNode {
+
+	$nodeclass Forward1000 : PilotNode(PilotTypes::walk) : doStart {
+		pilotreq.dx = 1700;
+	}
+
+	$nodeclass Left90 : PilotNode(PilotTypes::walk) : doStart {
+		pilotreq.da = M_PI/2;
+	}
+
+$nodeclass Forward1001 : PilotNode(PilotTypes::walk) : doStart {
+		pilotreq.dx = 785;
+	}
+
+$nodeclass Left91 : PilotNode(PilotTypes::walk) : doStart {
+		pilotreq.da = M_PI/-2;
+	}
+
+$nodeclass Forward1002 : PilotNode(PilotTypes::walk) : doStart {
+		pilotreq.dx = 1150;
+	}
+$nodeclass Left92 : PilotNode(PilotTypes::walk) : doStart {
+		pilotreq.da = M_PI/2;
+	}
+
+$nodeclass Forward1003 : PilotNode(PilotTypes::walk) : doStart {
+		pilotreq.dx = 575;
+	}
+$nodeclass Left93 : PilotNode(PilotTypes::walk) : doStart {
+		pilotreq.da = M_PI/-2;
+	}
+
+$nodeclass Forward1004 : PilotNode(PilotTypes::walk) : doStart {
+		pilotreq.dx = 1500;
+	}
+	$setupmachine {
+                  
+  Forward1000 =C=> Left90 =C=> Forward1001 =C=> Left91 =C=> Forward1002 =C=> Left92 =C=> Forward1003 =C=> Left93 =C=> Forward1004 =C=>   SpeechNode("done")
+                  
+	}
+}
+
+REGISTER_BEHAVIOR(PilotLabMaze); 
+	

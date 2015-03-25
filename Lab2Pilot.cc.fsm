@@ -1,0 +1,26 @@
+#include "Behaviors/StateMachine.h"
+
+$nodeclass PilotLab1 : VisualRoutinesStateNode {
+
+	$nodeclass Forward1000 : PilotNode(PilotTypes::walk) : doStart {
+		pilotreq.dx = 1000;
+	}
+
+	$nodeclass Left90 : PilotNode(PilotTypes::walk) : doStart {
+		pilotreq.da = M_PI/2;
+	}
+	$setupmachine {
+                  loop:
+		//  Forward500 =C=> Left90 =C=> SpeechNode("done")
+                  Forward1000 =C=> Left90 =C=>
+                  Forward1000 =C=> Left90 =C=>
+                  Forward1000 =C=> Left90 =C=>
+                  Forward1000 =C=> Left90 =C=>
+                //  SpeechNode("Type 'msg' to continue") =TM=> loop
+		loop
+
+	}
+}
+
+REGISTER_BEHAVIOR(PilotLab1);
+	

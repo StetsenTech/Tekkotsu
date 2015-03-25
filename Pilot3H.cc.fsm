@@ -1,0 +1,33 @@
+#include "Behaviors/StateMachine.h"
+
+$nodeclass MeasureDistance : VisualRoutinesStateNode {
+
+	$provide Point initialPosition;
+	$provide AngTwoPi initialOrientation;
+
+	$nodeclass Move: PilotNode (PilotTypes::walk) : doStart {
+	   $reference MeasureDistance::initialPosition, MeasureDistance::initialOrientation;
+	   initialPosition = theAgent->getCentroid();
+	   initialOrientation = theAgent->getOrientation();
+	   cout << "Robot starts out at " << initialPosition << endl;
+	   pilotreq.dx = 500;
+	}
+
+	$nodeclass Report : VisualRoutinesStateNode : doStart {
+	   $reference MeasureDistance::initialPosition, MeasureDistance::initialOrientation;
+	   Point finalPosition = theAgent->getCentroid();
+	   AngTwoPi finalOrientation = theAgent->getOrientation();
+	   cout << "Robot stops at " << finalPosition << endl;
+	   cout << "Estimated distance traveled = " 
+	        << (finalPosition-initialPosition).xyNorm() << " mm " << endl;
+	   cout << "Orientation drift = "
+		<< float (finalOrientation-initialOrientation)*180/M_PI << " degrees" << endl;
+	}
+	
+	$setupmachine {
+	   Move =C=> Report
+	}
+
+}
+
+REGISTER_BEHAVIOR(MeasureDistance);

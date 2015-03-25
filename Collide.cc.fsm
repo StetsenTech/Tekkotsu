@@ -1,0 +1,36 @@
+#include "Behaviors/StateMachine.h"
+
+$nodeclass PilotLab3 : VisualRoutinesStateNode {
+
+  $nodeclass Forward1500 : PilotNode(PilotTypes::walk) : doStart {
+    pilotreq.dx = 1500;
+    pilotreq.forwardSpeed = 100;		// speed 100 millimeters/second
+  }	
+
+  $nodeclass Backup : PilotNode(PilotTypes::walk) : doStart {
+    pilotreq.dx = -100;			// negative displacement means back up
+    pilotreq.forwardSpeed = 30;		// speeds are always non-negative
+  }
+
+$nodeclass TurnRight : PilotNode(PilotTypes::walk) : doStart {
+  pilotreq.da = M_PI/-2;		
+    		        // speeds are always non-negative
+  }
+
+  $setupmachine {
+    forward : Forward1500
+    backup : Backup
+    turnright : TurnRight
+
+    forward =PILOT=> SpeechNode("done")
+
+    forward =PILOT(collisionDetected)=>
+       SpeechNode("Ouch! I hit something.") =C=> Backup  =C=> TurnRight =C=> forward 
+    
+   
+
+  }
+
+}
+
+REGISTER_BEHAVIOR(PilotLab3);

@@ -1,0 +1,71 @@
+#include "Behaviors/StateMachine.h"
+
+$nodeclass ComboLock3 : StateNode {
+
+  $nodeclass CheckLock : StateNode : doStart {
+
+    static int temp[5];
+    static int robot[5]={1,0,1,1,0};
+    static bool status=true;
+    static int i = 0;
+
+	size_t button = event->getSourceID ();
+	if(i<5)
+	
+	{
+		if ( button < RobotInfo::NumButtons ){
+		temp[i]=button;
+		i++;
+		postStateCompletion();
+
+		}		
+		else
+		cout << "Event had invalid button number: " << button << endl;
+	}
+
+        if (i == 5){
+	for(int x=0; x < 5; x++)
+	{
+             cout<<"lock value" <<temp[x]<<endl;
+ 		if(temp[x]!=robot[x]){
+ 			status = false;
+                       
+		}
+ 		
+	}
+
+
+	if(status == true)
+	{
+		postStateSuccess();
+		i=0;
+                cout<<"True"<<endl;
+	}
+	else if(status==false){
+		postStateFailure();
+		i=0;
+		cout<<"false"<<endl;
+	}
+      }
+}
+
+
+  $setupmachine{
+	
+
+        entryStart: StateNode
+	request: SpeechNode("Press a button")
+	unlock: SpeechNode("Unlocked")
+	growl: SoundNode("growl.wav")
+        check: CheckLock
+
+	entryStart =B(PlayButOffset,activateETID)=> check
+	entryStart =B(AdvanceButOffset,activateETID)=> check
+	check =S=> unlock 
+	check =C=> entryStart
+	check =F=> growl =C=> entryStart
+
+}
+}
+
+REGISTER_BEHAVIOR(ComboLock3);
